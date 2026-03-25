@@ -8,7 +8,7 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 model = genai.GenerativeModel("models/gemini-1.5-flash")
 
 # 2. 구글 시트 주소 (오류 방지를 위해 지저분한 뒷부분을 잘라낸 깔끔한 주소입니다)
-SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1_ko0JRJ6en5UKWZyCSKJZ3dxmfuLesV16YYu7PCCAGo"
+SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1_ko0JRJ6en5UKWZyCSKJZ3dxmfuLesV16YYu7PCCAGo/"
 
 # --- 화면 구성 ---
 st.set_page_config(page_title="아시아나 채용 센터", page_icon="✈️")
