@@ -9,7 +9,7 @@ model = genai.GenerativeModel("models/gemini-1.5-flash")
 
 # 2. 구글 시트 주소 (새로 만든 시트 주소를 여기에 넣으세요!)
 # 주소 끝에 /edit... 부분을 지우고 넣어도 되지만 그대로 넣으셔도 됩니다.
-SPREADSHEET_URL = "여기에_새로_만든_시트_주소를_넣으세요"
+SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1_ko0JRJ6en5UKWZyCSKJZ3dxmfuLesV16YYu7PCCAGo/edit?gid=0#gid=0"
 
 # --- 화면 구성 ---
 st.set_page_config(page_title="아시아나 채용 센터", page_icon="✈️")
