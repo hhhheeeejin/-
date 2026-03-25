@@ -1,4 +1,4 @@
 streamlit
 google-generativeai
 pandas
-openpyxl
+st-gsheets-connection
