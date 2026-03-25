@@ -49,30 +49,21 @@ with tab2:
         
         if submitted:
             if name and phone:
-                try:
-                    # 구글 시트 연결
+              try:
                     conn = st.connection("gsheets", type=GSheetsConnection)
                     
-                    # 데이터 읽기 (워크시트 이름을 'Sheet1'으로 설정)
-                    # 시트의 1행에는 반드시 제목들이 적혀 있어야 합니다!
-                    df = conn.read(spreadsheet=SPREADSHEET_URL, worksheet="Sheet1", ttl=0)
+                    # 💡 worksheet 이름을 지정하지 않으면 '첫 번째 탭'에 자동으로 씁니다.
+                    df = conn.read(spreadsheet=SPREADSHEET_URL, ttl=0)
                     
-                    # 새 데이터 생성
                     new_data = pd.DataFrame([{
                         "신청시간": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
-                        "이름": name, "성별": gender, "나이": age, "연락처": phone,
-                        "주소": address, "교통방법": q1, "소요시간": q2, "새벽도착가능": q3
+                        "이름": str(name), "성별": str(gender), "나이": int(age), "연락처": str(phone),
+                        "주소": str(address), "교통방법": str(q1), "소요시간": str(q2), "새벽도착가능": str(q3)
                     }])
                     
-                    # 기존 데이터에 새 데이터 합치기
+                    # 제목(Column)이 일치하는지 확인하고 합칩니다.
                     updated_df = pd.concat([df, new_data], ignore_index=True)
-                    
-                    # 구글 시트에 다시 쓰기
                     conn.update(spreadsheet=SPREADSHEET_URL, data=updated_df)
                     
                     st.balloons()
-                    st.success(f"{name}님, 접수가 완료되었습니다! 구글 시트를 확인해보세요. ✈️")
-                except Exception as e:
-                    st.error(f"⚠️ 연결 오류 발생! 주소 형식이 올바르지 않거나 공유 설정이 잘못되었습니다.\n오류내용: {e}")
-            else:
-                st.error("이름과 연락처는 필수입니다!")
+                    st.success(f"{name}님, 드디어 접수 완료! 구글 시트를 확인하세요! ✈️")
