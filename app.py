@@ -3,11 +3,11 @@ import google.generativeai as genai
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
-# 1. AI 설정 (Secrets에 GOOGLE_API_KEY만 있으면 됩니다!)
+# 1. AI 설정
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 model = genai.GenerativeModel("models/gemini-1.5-flash")
 
-# 2. 구글 시트 주소 (오류 방지를 위해 지저분한 뒷부분을 잘라낸 깔끔한 주소입니다)
+# 2. 구글 시트 주소
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1_ko0JRJ6en5UKWZyCSKJZ3dxmfuLesV16YYu7PCCAGo/edit#gid=0"
 
 # --- 화면 구성 ---
@@ -27,7 +27,6 @@ with tab1:
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"): st.markdown(prompt)
         with st.chat_message("assistant"):
-            # 채용 정보를 바탕으로 답변하도록 프롬프트 구성
             response = model.generate_content(f"너는 아시아나 에어포트 채용 담당자야. 친절하게 답해줘: {prompt}")
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
@@ -49,10 +48,9 @@ with tab2:
         
         if submitted:
             if name and phone:
-              try:
+                try:
                     conn = st.connection("gsheets", type=GSheetsConnection)
-                    
-                    # 💡 worksheet 이름을 지정하지 않으면 '첫 번째 탭'에 자동으로 씁니다.
+                    # 시트 읽기
                     df = conn.read(spreadsheet=SPREADSHEET_URL, ttl=0)
                     
                     new_data = pd.DataFrame([{
@@ -61,9 +59,12 @@ with tab2:
                         "주소": str(address), "교통방법": str(q1), "소요시간": str(q2), "새벽도착가능": str(q3)
                     }])
                     
-                    # 제목(Column)이 일치하는지 확인하고 합칩니다.
                     updated_df = pd.concat([df, new_data], ignore_index=True)
                     conn.update(spreadsheet=SPREADSHEET_URL, data=updated_df)
                     
                     st.balloons()
-                    st.success(f"{name}님, 드디어 접수 완료! 구글 시트를 확인하세요! ✈️")
+                    st.success(f"{name}님, 드디어 접수 완료! ✈️")
+                except Exception as e:
+                    st.error(f"⚠️ 연결 오류 발생: {str(e)}")
+            else:
+                st.error("이름과 연락처는 필수입니다!")
